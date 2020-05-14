@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EJS Demo</title>
+  </head>
+  <body>
+    <ul>
+      <% if (songsList.length) { %>
+      <ul>
+        <% for(var song of songsList) { %>
+        <li><%= song.name %> - <%= song.yearOfRelease %></li>
+        <% } %>
+      </ul>
+      <% } %>
+    </ul>
+
+    <form onsubmit="sendSong(event)">
+      <input type="text" id="song" />
+      <input type="number" id="year" />
+      <button type="submit">Upload song</button>
+    </form>
+  </body>
+
+  <script>
+    async function sendSong(event) {
+      event.preventDefault();
+      const name = document.querySelector("#song").value;
+      const yearOfRelease = document.querySelector("#year").value;
+      const response = await fetch("/song", {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({ name, yearOfRelease }),
+      });
+
+      const url = await response.text();
+      window.location.href = url;
+    }
+  </script>
+</html>
